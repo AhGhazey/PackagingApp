@@ -1,0 +1,128 @@
+definitions:
+  rest.AddPackagesRequest:
+    properties:
+      packages:
+        items:
+          $ref: '#/definitions/rest.Package'
+        type: array
+    type: object
+  rest.AddPackagesResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  rest.CalculatePackagesRequest:
+    properties:
+      amount:
+        type: integer
+    type: object
+  rest.CalculatePackagesResponse:
+    properties:
+      packages:
+        items:
+          $ref: '#/definitions/rest.SizedPackage'
+        type: array
+    type: object
+  rest.HealthResponse:
+    properties:
+      isAlive:
+        type: boolean
+      msg:
+        type: string
+    type: object
+  rest.Package:
+    properties:
+      size:
+        type: integer
+    type: object
+  rest.SizedPackage:
+    properties:
+      quantity:
+        type: integer
+      size:
+        type: integer
+    type: object
+info:
+  contact: {}
+paths:
+  /add-packages:
+    post:
+      consumes:
+      - application/json
+      description: Add packages to the system
+      parameters:
+      - description: Request body with packages to add
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/rest.AddPackagesRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Packages added successfully
+          schema:
+            $ref: '#/definitions/rest.AddPackagesResponse'
+        "400":
+          description: Invalid request format or package size
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      summary: Add packages
+      tags:
+      - Packages
+  /calculate-packages:
+    post:
+      consumes:
+      - application/json
+      description: Calculate the minimum number of packages required for a given amount
+        of items
+      parameters:
+      - description: Request body with the amount of items
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/rest.CalculatePackagesRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Minimum number of packages calculated successfully
+          schema:
+            $ref: '#/definitions/rest.CalculatePackagesResponse'
+        "400":
+          description: Invalid request format or amount
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      summary: Calculate required packages
+      tags:
+      - Packages
+  /health:
+    get:
+      description: get request to check service health
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/rest.HealthResponse'
+        "408":
+          description: fail
+          schema:
+            type: string
+        "500":
+          description: fail
+          schema:
+            type: string
+      summary: get request to check service health
+swagger: "2.0"
